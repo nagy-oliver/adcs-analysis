@@ -1,3 +1,4 @@
+import numpy as np
 mu = 2.203187099e13 #gravitational parameter
 R = 2439.7e3 #radius of mercury
 vec_nadir_global = np.array([0,0,1])
