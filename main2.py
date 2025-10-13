@@ -119,6 +119,8 @@ data = {
 
 # ---------- Simulation Loop ----------
 
+t_threshold = None
+
 while t <= cst.T:
     t_solar = torque_solar(q, cst.t_eclipse, t)
     t_gg = torque_gg(q, cst)
@@ -133,6 +135,10 @@ while t <= cst.T:
     roll = np.arctan2(2*(w*x + y*z), 1 - 2*(x**2 + y**2))*180.0/np.pi
     pitch = np.arcsin(sinp)*180.0/np.pi
     yaw = np.arctan2(2*(w*z + x*y), 1 - 2*(y**2 + z**2))*180.0/np.pi
+
+    if ((abs(roll) >= cst.threshold) or (abs(pitch) >= cst.threshold) or (abs(yaw) >= cst.threshold)) and (t_threshold is None):
+        t_threshold = t
+        i_threshold = int(t/dt)
 
     data['t'].append(t)
     data['roll'].append(roll)
@@ -188,5 +194,7 @@ for plot in plots:
     plt.grid(True)
     plt.tight_layout()
     plt.savefig(os.path.join('plots', plot['filename']), format='pdf')
-
 plt.show()
+
+print(f'Exceeded pointing accuracy threshold at time {t_threshold:.2f} s.')
+
