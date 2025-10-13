@@ -19,9 +19,8 @@ def solar_torque(sun_vector_global, quaternion):
     ----------
     sun_vector_global : np.array(3)
         Vector pointing from the spacecraft to the Sun (in the global frame).
-    euler_angles : tuple (phi, theta, psi)
-        Spacecraft attitude angles: roll, pitch, yaw [radians].
-
+    quaternion : np.array(4)
+        Attitude quaternion (w, x, y, z) mapping body→global.
     Returns
     -------
     torque_local : np.array(3)
@@ -38,16 +37,13 @@ def solar_torque(sun_vector_global, quaternion):
     # Normalize sun vector
     sun_unit_global = normalize(sun_vector_global)
 
-    # Transform Sun vector to local frame
-    sun_unit_local = torqueGlobalToLocal(sun_unit_global,quaternion)
+    # Transform Sun vector to local frame (using quaternion)
+    sun_unit_local = torqueGlobalToLocal(sun_unit_global, quaternion)
 
-    # Solar force (simple model)
-    # Acts opposite to Sun direction
+    # Compute solar force (acts opposite Sun direction)
     solar_force_local = -(1 + rho) * p_s * s * sun_unit_local
 
     # Torque = r × F (in local frame)
     torque_local = np.cross(vec_cp_local, solar_force_local)
-
     return torque_local
-
 
