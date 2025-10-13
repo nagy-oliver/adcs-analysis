@@ -35,7 +35,7 @@ object=Spacecraft(mass=1.0, inertia=cst.I, initialEulerAnglesDeg=np.array([0.0,0
 eulerAngleX = []
 
 for i in range(1000):
-    torque = np.array([100, 100, 100])
+    torque = np.array([10, 100, 100])
     object.update(torque, dt=0.001)
     eulerAngleX.append(object.getEulerAnglesDeg()[0])
 
