@@ -1,3 +1,7 @@
+import numpy as np
+
+
+
 # Constants used in the simulation
 
 I = np.array([
