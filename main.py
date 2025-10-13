@@ -35,16 +35,39 @@ object=Spacecraft(mass=1.0, inertia=cst.I, initialEulerAnglesDeg=np.array([0.0,0
 eulerAngleX = []
 eulerAngleY = []
 eulerAngleZ = []
+
+angularVelocityX = []
+angularVelocityY = []
+angularVelocityZ = []
+
 magnetic_torques = np.array([0.00000002,0.00000002,0.00000002])
 internal_torques = np.array([0.0306,0.0306,0.0306])
 
-for i in range(10000):
+internal_torques = np.array([0.0,0.0,0.0])
+
+for i in range(200000):
     torque = tq.solar_torque(sun_vector_global=np.array([0.8,0.2,0.5]), quaternion=object.quaternion)+magnetic_torques+internal_torques
-    object.update(torque, dt=0.01)
+    object.update(torque, dt=0.1)
     eulerAngleX.append(object.getEulerAnglesDeg()[0])
     eulerAngleY.append(object.getEulerAnglesDeg()[1])
     eulerAngleZ.append(object.getEulerAnglesDeg()[2])
 
+    angularVelocityX.append(object.angularVelocity[0])
+    angularVelocityY.append(object.angularVelocity[1])
+    angularVelocityZ.append(object.angularVelocity[2])
+
+    
+plt.figure(figsize=(12, 8))
+plt.subplot(2, 1, 1)
+plt.plot(angularVelocityX)
+plt.plot(angularVelocityY)
+plt.plot(angularVelocityZ)
+plt.xlabel('Time step')
+plt.ylabel('Angular Velocity (rad/s)')
+plt.title('Evolution of Angular Velocities over Time')
+plt.grid()
+plt.legend(['X', 'Y', 'Z'])
+plt.subplot(2, 1, 2)
 plt.plot(eulerAngleX)
 plt.plot(eulerAngleY)
 plt.plot(eulerAngleZ)
