@@ -5,13 +5,13 @@ import numpy as np
 
 # Constants used in the simulation
 
-mu = 0 #gravitational parameter
-R = 0#radius of mercury
+mu = 2.23*10**10#gravitational parameter
+R = 2439.7*10**3#radius of mercury
 
 I = np.array([
-    [1, 0, 0],
-    [0, 1, 0],
-    [0, 0, 1]
+    [1032.537, 13.602, 97.717],
+    [13.602, 983.014, -48.576],
+    [97.717, -48.576, 400.674]
 ])
 
 vec_nadir_0 = np.array([0,0,1])
