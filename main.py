@@ -51,8 +51,8 @@ for i in range(n):
     quaternionGlobalWRTSolar = ro.Rotation.from_euler('xyz', eulerAnglesGlobalWRTSolarDeg, degrees=True).as_quat()
     sunVectorSolar = np.array([0.4,0.7,0.5])
     sunVectorGlobal = ut.torqueGlobalToLocal(sunVectorSolar, quaternionGlobalWRTSolar)
-    torque = tq.solar_torque(sun_vector_global=sunVectorGlobal, quaternion=object.quaternion)+magnetic_torques+internal_torques+tq.torque_gg(vec_nadir=cst.vec_nadir_0,cst=cst)
-    object.update(torque, dt=1)
+    torque = tq.solar_torque(sun_vector_global=sunVectorGlobal, quaternion=object.quaternion)*0+magnetic_torques*0+internal_torques+tq.torque_gg(vec_nadir=ut.torqueGlobalToLocal(cst.vec_nadir_0, object.quaternion),cst=cst)
+    object.update(torque, dt=0.1)
     eulerAngleX.append(object.getEulerAnglesDeg()[0])
     eulerAngleY.append(object.getEulerAnglesDeg()[1])
     eulerAngleZ.append(object.getEulerAnglesDeg()[2])
@@ -76,6 +76,10 @@ plt.subplot(2, 1, 2)
 
 method = 1 # 0 for spikes, 1 for hidden spikes, 2 for unwrapping
 if method == 0:
+    #only the frist 10 steps will be plotted
+    eulerAngleX = eulerAngleX[:10]
+    eulerAngleY = eulerAngleY[:10]
+    eulerAngleZ = eulerAngleZ[:10]
     plt.plot(eulerAngleX)
     plt.plot(eulerAngleY)
     plt.plot(eulerAngleZ)
