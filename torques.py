@@ -28,7 +28,7 @@ def solar_torque(sun_vector_global, euler_angles):
         Torque vector in the local (body) frame [N·m].
     """
     # Vector from CoG to center of pressure in local frame
-    vec_cp_local = np.array([0.0, 1.0, 0.0])   # [m]
+    vec_cp_local = np.array([0.0, -1.0, 0.0])   # [m]
 
     # Constants
     rho = 0.6          # reflectivity (from SMAD)
@@ -49,8 +49,5 @@ def solar_torque(sun_vector_global, euler_angles):
     torque_local = np.cross(vec_cp_local, solar_force_local)
 
     return torque_local
-
-
-
 
 
