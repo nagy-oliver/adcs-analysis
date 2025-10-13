@@ -33,15 +33,22 @@ object=Spacecraft(mass=1.0, inertia=cst.I, initialEulerAnglesDeg=np.array([0.0,0
 
 
 eulerAngleX = []
+eulerAngleY = []
+eulerAngleZ = []
 
-for i in range(1000):
-    torque = np.array([100, 100, 100])
-    object.update(torque, dt=0.001)
+for i in range(10000):
+    torque = tq.solar_torque(sun_vector_global=np.array([0.8,0.2,0.5]), quaternion=object.quaternion)
+    object.update(torque, dt=0.1)
     eulerAngleX.append(object.getEulerAnglesDeg()[0])
+    eulerAngleY.append(object.getEulerAnglesDeg()[1])
+    eulerAngleZ.append(object.getEulerAnglesDeg()[2])
 
 plt.plot(eulerAngleX)
+plt.plot(eulerAngleY)
+plt.plot(eulerAngleZ)
 plt.xlabel('Time step')
-plt.ylabel('Euler Angle X (deg)')
-plt.title('Evolution of Euler Angle X over Time')
+plt.ylabel('Euler Angle (deg)')
+plt.title('Evolution of Euler Angles over Time')
 plt.grid()
+plt.legend(['X', 'Y', 'Z'])
 plt.show()
