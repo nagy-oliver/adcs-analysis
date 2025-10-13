@@ -41,8 +41,6 @@ angularVelocityY = []
 angularVelocityZ = []
 
 magnetic_torques = np.array([0.00000002,0.00000002,0.00000002])
-internal_torques = np.array([0.0306,0.0306,0.0306])
-
 internal_torques = np.array([0.0,0.0,0.0])
 
 n = 76257
