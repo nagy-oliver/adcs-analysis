@@ -15,5 +15,5 @@ I = np.array([
     [97.717, -48.576, 400.674]
 ])
 
-vec_nadir_0 = np.array([0,0,1])
+vec_nadir_global = np.array([0,0,1])
 
