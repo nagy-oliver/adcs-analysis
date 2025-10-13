@@ -35,10 +35,12 @@ object=Spacecraft(mass=1.0, inertia=cst.I, initialEulerAnglesDeg=np.array([0.0,0
 eulerAngleX = []
 eulerAngleY = []
 eulerAngleZ = []
+magnetic_torques = np.array([0.00000002,0.00000002,0.00000002])
+internal_torques = np.array([0.0306,0.0306,0.0306])
 
 for i in range(10000):
-    torque = tq.solar_torque(sun_vector_global=np.array([0.8,0.2,0.5]), quaternion=object.quaternion)
-    object.update(torque, dt=0.1)
+    torque = tq.solar_torque(sun_vector_global=np.array([0.8,0.2,0.5]), quaternion=object.quaternion)+magnetic_torques+internal_torques
+    object.update(torque, dt=0.01)
     eulerAngleX.append(object.getEulerAnglesDeg()[0])
     eulerAngleY.append(object.getEulerAnglesDeg()[1])
     eulerAngleZ.append(object.getEulerAnglesDeg()[2])
