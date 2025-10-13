@@ -2,51 +2,46 @@
 import torques as tq
 import constants as cst
 import utils as ut
-def physics(torques,cst):
-    dt = 0.001 #1ms
-    alpha = cst.alpha_0
-    omega = cst.omega_0
-    angles = cst.angles_0
-    torques_sum = sum(torques)
-    alpha += np.linalg.inv(cst.I)@(torques_sum-np.cross(cst.I@omega))
-    omega += alpha*dt
-    angles += omega*dt
-    return omega, angles
-
 import numpy as np
+import matplotlib.pyplot as plt
+
+import scipy.spatial.transform as ro
+        
 
 class Spacecraft:
-    def __init__(self, mass, inertia, initialEulerAngles, initialAngularVelocity):
+    def __init__(self, mass, inertia, initialEulerAnglesDeg, initialAngularVelocity):
         self.mass = mass
         self.inertia = inertia
-        self.eulerAngles = initialEulerAngles  # [roll, pitch, yaw]
-        self.angularVelocity = initialAngularVelocity  # [wx, wy, wz]
-
+        self.quaternion = ro.Rotation.from_euler('xyz', initialEulerAnglesDeg, degrees=True).as_quat()
+        self.angularVelocity = initialAngularVelocity
 
     def update(self, torques, dt):
-        # Update angular velocity
         angularAcceleration = np.linalg.inv(self.inertia) @ (torques - np.cross(self.angularVelocity, self.inertia @ self.angularVelocity))
         self.angularVelocity += angularAcceleration * dt
         
-        # Update Euler angles
-        phi, theta, psi = self.eulerAngles
-        wx, wy, wz = self.angularVelocity
-        
-        dphi = wx + (wy * np.sin(phi) + wz * np.cos(phi)) * np.tan(theta)
-        dtheta = wy * np.cos(phi) - wz * np.sin(phi)
-        dpsi = (wy * np.sin(phi) + wz * np.cos(phi)) / np.cos(theta)
+        deltaQuat = ro.Rotation.from_rotvec(self.angularVelocity * dt).as_quat()
+        self.quaternion = ro.Rotation.from_quat(self.quaternion) * ro.Rotation.from_quat(deltaQuat)
+        self.quaternion = self.quaternion.as_quat()
 
-        self.eulerAngles += np.array([dphi, dtheta, dpsi]) * dt
+    def getEulerAnglesDeg(self):
+        return ro.Rotation.from_quat(self.quaternion).as_euler('xyz', degrees=True)
 
 
-    
-        
-        
 
-object=Spacecraft(mass=1.0, inertia=cst.I, initialEulerAngles=np.array([0.0,0.0,0.0]), initialAngularVelocity=np.array([0.0,0.0,0.0]))
 
-for t in range(0,100):
-    object.update()
-    
+object=Spacecraft(mass=1.0, inertia=cst.I, initialEulerAnglesDeg=np.array([0.0,0.0,0.0]), initialAngularVelocity=np.array([0.0,0.0,0.0]))
 
-print("Final Euler Angles:", object.eulerAngles)
+
+eulerAngleX = []
+
+for i in range(1000):
+    torque = np.array([100, 100, 100])
+    object.update(torque, dt=0.001)
+    eulerAngleX.append(object.getEulerAnglesDeg()[0])
+
+plt.plot(eulerAngleX)
+plt.xlabel('Time step')
+plt.ylabel('Euler Angle X (deg)')
+plt.title('Evolution of Euler Angle X over Time')
+plt.grid()
+plt.show()

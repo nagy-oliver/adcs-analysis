@@ -7,39 +7,7 @@ def normalize(v):
         return v
     return v / norm
 
-def localToGlobal(eulerAngles, localVec):
-    phi, theta, psi = eulerAngles
-    R_x = np.array([[1, 0, 0],
-                    [0, np.cos(phi), -np.sin(phi)],
-                    [0, np.sin(phi), np.cos(phi)]])
-    
-    R_y = np.array([[np.cos(theta), 0, np.sin(theta)],
-                    [0, 1, 0],
-                    [-np.sin(theta), 0, np.cos(theta)]])
-    
-    R_z = np.array([[np.cos(psi), -np.sin(psi), 0],
-                    [np.sin(psi), np.cos(psi), 0],
-                    [0, 0, 1]])
-    
-    R = R_z @ R_y @ R_x
-    globalVec = R @ localVec
-    return globalVec
-
-def globalToLocal(eulerAngles, globalVec):
-    phi, theta, psi = eulerAngles
-    R_x = np.array([[1, 0, 0],
-                    [0, np.cos(phi), -np.sin(phi)],
-                    [0, np.sin(phi), np.cos(phi)]])
-    
-    R_y = np.array([[np.cos(theta), 0, np.sin(theta)],
-                    [0, 1, 0],
-                    [-np.sin(theta), 0, np.cos(theta)]])
-    
-    R_z = np.array([[np.cos(psi), -np.sin(psi), 0],
-                    [np.sin(psi), np.cos(psi), 0],
-                    [0, 0, 1]])
-    
-    R = R_z @ R_y @ R_x
-    localVec = R.T @ globalVec
-    return localVec
-
+def torqueGlobalToLocal(torque_global, quaternion):
+    import scipy.spatial.transform as ro
+    rotation = ro.Rotation.from_quat(quaternion)
+    return rotation.inv().apply(torque_global)
