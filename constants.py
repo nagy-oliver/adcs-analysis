@@ -1,13 +1,8 @@
-import numpy as np
-#test
-
-
-
-# Constants used in the simulation
-
-mu = 2.23*10**10#gravitational parameter
-R = 2439.7*10**3#radius of mercury
-h = 700000 #orbit altitude
+mu = 2.203187099e13 #gravitational parameter
+R = 2439.7e3 #radius of mercury
+vec_nadir_global = np.array([0,0,1])
+h = 750e3
+sun_unit_global = np.array([0,0,1])
 
 I = np.array([
     [1032.537, 13.602, 97.717],
@@ -15,5 +10,4 @@ I = np.array([
     [97.717, -48.576, 400.674]
 ])
 
-vec_nadir_global = np.array([0,0,1])
 
