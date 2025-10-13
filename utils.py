@@ -42,3 +42,4 @@ def globalToLocal(eulerAngles, globalVec):
     R = R_z @ R_y @ R_x
     localVec = R.T @ globalVec
     return localVec
+
