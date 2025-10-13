@@ -53,7 +53,7 @@ for i in range(n):
     sunVectorSolar = np.array([0.4,0.7,0.5])
     sunVectorGlobal = ut.torqueGlobalToLocal(sunVectorSolar, quaternionGlobalWRTSolar)
     torque = tq.solar_torque(sun_vector_global=sunVectorGlobal, quaternion=object.quaternion)+magnetic_torques+internal_torques+tq.torque_gg(vec_nadir=cst.vec_nadir_0,cst=cst)
-    object.update(torque, dt=0.1)
+    object.update(torque, dt=1)
     eulerAngleX.append(object.getEulerAnglesDeg()[0])
     eulerAngleY.append(object.getEulerAnglesDeg()[1])
     eulerAngleZ.append(object.getEulerAnglesDeg()[2])
