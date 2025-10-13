@@ -4,3 +4,4 @@ def torque_gg(vec_nadir,cst):
     #Returns the torque vector numpy array
     t = 3*(cst.mu/(cst.h + cst.R)**3)*np.cross(vec_nadir,cst.I@vec_nadir)
     return t
+

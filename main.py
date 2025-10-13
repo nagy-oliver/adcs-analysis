@@ -2,6 +2,17 @@
 import torques as tq
 import constants as cst
 import utils as ut
+def physics(torques,cst):
+    dt = 0.001 #1ms
+    alpha = cst.alpha_0
+    omega = cst.omega_0
+    angles = cst.angles_0
+    torques_sum = sum(torques)
+    alpha += np.linalg.inv(cst.I)@(torques_sum-np.cross(cst.I@omega))
+    omega += alpha*dt
+    angles += omega*dt
+    return omega, angles
+
 import numpy as np
 
 class Spacecraft:
@@ -10,8 +21,6 @@ class Spacecraft:
         self.inertia = inertia
         self.eulerAngles = initialEulerAngles  # [roll, pitch, yaw]
         self.angularVelocity = initialAngularVelocity  # [wx, wy, wz]
-
-    
 
 
     def update(self, torques, dt):

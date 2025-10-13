@@ -24,7 +24,7 @@ def localToGlobal(eulerAngles, localVec):
     R = R_z @ R_y @ R_x
     globalVec = R @ localVec
     return globalVec
-    
+
 def globalToLocal(eulerAngles, globalVec):
     phi, theta, psi = eulerAngles
     R_x = np.array([[1, 0, 0],
