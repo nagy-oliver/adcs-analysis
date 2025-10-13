@@ -1,5 +1,5 @@
-from utils import globalToLocal
-from utils import localToGlobal
+from utils import torqueGlobalToLocal
+from utils import torqueLocalToGlobal
 from utils import normalize
 import numpy as np
 
@@ -11,7 +11,7 @@ def torque_gg(vec_nadir,cst):
     return t
 
 
-def solar_torque(sun_vector_global, euler_angles):
+def solar_torque(sun_vector_global, quaternion):
     """
     Calculates the solar radiation torque in the spacecraft's local frame.
 
@@ -39,7 +39,7 @@ def solar_torque(sun_vector_global, euler_angles):
     sun_unit_global = normalize(sun_vector_global)
 
     # Transform Sun vector to local frame
-    sun_unit_local = globalToLocal(euler_angles, sun_unit_global)
+    sun_unit_local = torqueGlobalToLocal(sun_unit_global,quaternion)
 
     # Solar force (simple model)
     # Acts opposite to Sun direction
