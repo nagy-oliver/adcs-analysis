@@ -11,3 +11,8 @@ def torqueGlobalToLocal(torque_global, quaternion):
     import scipy.spatial.transform as ro
     rotation = ro.Rotation.from_quat(quaternion)
     return rotation.inv().apply(torque_global)
+
+def torqueLocalToGlobal(torque_local, quaternion):
+    import scipy.spatial.transform as ro
+    rotation = ro.Rotation.from_quat(quaternion)
+    return rotation.apply(torque_local)
