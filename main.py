@@ -46,8 +46,8 @@ internal_torques = np.array([0.0306,0.0306,0.0306])
 internal_torques = np.array([0.0,0.0,0.0])
 
 for i in range(200000):
-    torque = tq.solar_torque(sun_vector_global=np.array([0.8,0.2,0.5]), quaternion=object.quaternion)+magnetic_torques+internal_torques
-    object.update(torque, dt=0.1)
+    torque = tq.solar_torque(sun_vector_global=np.array([0.8,0.2,0.5]), quaternion=object.quaternion)+magnetic_torques+internal_torques+tq.torque_gg(vec_nadir=cst.vec_nadir_0,cst=cst)
+    object.update(torque, dt=1)
     eulerAngleX.append(object.getEulerAnglesDeg()[0])
     eulerAngleY.append(object.getEulerAnglesDeg()[1])
     eulerAngleZ.append(object.getEulerAnglesDeg()[2])

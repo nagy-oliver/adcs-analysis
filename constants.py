@@ -7,6 +7,7 @@ import numpy as np
 
 mu = 2.23*10**10#gravitational parameter
 R = 2439.7*10**3#radius of mercury
+h = 700000
 
 I = np.array([
     [1032.537, 13.602, 97.717],
