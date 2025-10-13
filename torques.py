@@ -47,4 +47,3 @@ def solar_torque(sun_vector_global, quaternion):
     torque_local = np.cross(vec_cp_local, solar_force_local)
     return torque_local
 
-x
