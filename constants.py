@@ -4,6 +4,8 @@ R = 2439.7e3 #radius of mercury
 vec_nadir_global = np.array([0,0,1])
 vec_nadir_0 = np.array([0,0,1])
 h = 750e3
+T = 7625.65 #s
+t_eclipse = 2113.80 #s
 sun_unit_global = np.array([0,0,1])
 
 I = np.array([

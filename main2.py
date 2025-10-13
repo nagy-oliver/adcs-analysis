@@ -66,7 +66,7 @@ def torque_gg(q, cst):
     factor = 3.0 * (cst.mu / (r**3))
     return factor * np.cross(vec_nadir_body, cst.I @ vec_nadir_body)
 
-def torque_solar(q):
+def torque_solar(q,t_eclipse,t):
     """Solar radiation torque in body frame."""
     rho = 0.6
     p_s = 4.8e-5
@@ -75,7 +75,9 @@ def torque_solar(q):
 
     sun_unit_local = transform_global_to_local(q, cst.sun_unit_global)
     solar_force_local = -(1 + rho) * p_s * s * sun_unit_local
-    torque_local = np.cross(vec_cp_local, solar_force_local)
+    torque_local = np.zeros(3)
+    if (t % cst.T) <= t_eclipse:
+        torque_local = np.cross(vec_cp_local, solar_force_local)
     return torque_local
 
 # Example constant torques
@@ -117,8 +119,8 @@ data = {
 
 # ---------- Simulation Loop ----------
 
-while t <= 7625.65:
-    t_solar = torque_solar(q)
+while t <= cst.T:
+    t_solar = torque_solar(q, cst.t_eclipse, t)
     t_gg = torque_gg(q, cst)
     torques = [t_solar, t_gg, magnetic_torques, internal_torques]
     state = physics(torques, cst, state, dt)
