@@ -7,6 +7,7 @@ h = 750e3
 T = 7625.65 #s
 t_eclipse = 2113.80 #s
 sun_unit_global = np.array([0,0,1])
+threshold = 0.1 # deg
 
 I = np.array([
     [1032.537, 13.602, 97.717],
