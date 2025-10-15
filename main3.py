@@ -240,6 +240,8 @@ angles_plot = angles.copy()
 angles_plot[np.where(diff > threshold)[0] + 1] = np.nan
 plt.plot(data['t'], angles_plot, label='Yaw')
 
+
+
 # ---------- Generate and save each figure ----------
 
 for plot in plots:
@@ -250,6 +252,7 @@ for plot in plots:
         plt.legend()
         plt.grid(True)
         plt.tight_layout()
+        plt.savefig(os.path.join('plots', 'euler_angles.pdf'), format='pdf')
         # plt.savefig(os.path.join('plots', plot['filename']), format='pdf')
         continue
 
