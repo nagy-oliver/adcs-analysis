@@ -220,7 +220,7 @@ plots = [
 
 # ---------- Euler Angle Plot (with discontinuity handling) ----------
 
-plt.figure(figsize=(12, 6))
+plt.figure(figsize=(8, 4))
 angles = np.array(data['roll'])
 diff = np.abs(np.diff(angles))
 threshold = 350  # degrees
@@ -253,7 +253,7 @@ for plot in plots:
         # plt.savefig(os.path.join('plots', plot['filename']), format='pdf')
         continue
 
-    plt.figure(figsize=(12, 6))
+    plt.figure(figsize=(8, 3))
 
     if plot['title'] == 'Gravity-gradient torque vs time':
         tg = np.vstack(data['torque gg'])
