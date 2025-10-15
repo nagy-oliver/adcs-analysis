@@ -286,3 +286,12 @@ if t_threshold is not None:
     print(f'Exceeded pointing accuracy threshold at time {t_threshold:.2f} s.')
 else:
     print('Pointing accuracy threshold was not exceeded during the simulation.')
+
+# print maximum magnitude of total torque of pitch and yaw
+max_torque_pitch = np.max(np.abs(tt[:, 1]))
+max_torque_yaw = np.max(np.abs(tt[:, 2]))
+print(f'Maximum magnitude of total torque for pitch or yaw: {max(max_torque_pitch, max_torque_yaw):.2e} N·m') 
+
+#print maximum magnitude of total torque of roll
+max_torque_roll = np.max(np.abs(tt[:, 0]))
+print(f'Maximum magnitude of total torque for roll: {max_torque_roll:.2e} N·m')
