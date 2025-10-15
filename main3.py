@@ -155,7 +155,7 @@ while t <= cst.T * 10:
     torque_total = np.sum(torques, axis=0)
     state = physics(torques, cst, state, dt)
     t, alpha, omega, q = state
-
+#hi
     # Convert quaternion to Euler angles for plotting
     w, x, y, z = q
     sinp = 2*(w*y - z*x)
