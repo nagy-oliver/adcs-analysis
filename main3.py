@@ -102,7 +102,7 @@ def torque_solar(q,t_eclipse,t,q_solar):
     return torque_local
 
 # Example constant torques
-magnetic_torques = np.array([(2e-8)/np.sqrt(3), (2e-8)/np.sqrt(3), (2e-8)/np.sqrt(3)])
+magnetic_torques = np.array([2e-8, 2e-8, 2e-8])
 internal_torques = np.array([0.0, 0.0, 0.0])
 
 # ---------- Physics Integration ----------
