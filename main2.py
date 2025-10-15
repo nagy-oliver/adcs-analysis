@@ -76,7 +76,7 @@ def torque_solar(q,t_eclipse,t):
     sun_unit_local = transform_global_to_local(q, cst.sun_unit_global)
     solar_force_local = -(1 + rho) * p_s * s * sun_unit_local
     torque_local = np.zeros(3)
-    if (t % cst.T) <= t_eclipse:
+    if (t % cst.T) >= t_eclipse:
         torque_local = np.cross(vec_cp_local, solar_force_local)
     return torque_local
 
