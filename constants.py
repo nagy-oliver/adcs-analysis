@@ -8,7 +8,7 @@ T = 7625.65 #s
 t_eclipse = 2113.80 #s
 sun_unit_solar = np.array([0.7,0.7,0])
 threshold = 0.1 # deg
-I_sp = np.array([
+I_catia_old = np.array([
     [1032.537, 13.602, 97.717],
     [13.602, 983.014, -48.576],
     [97.717, -48.576, 400.674]

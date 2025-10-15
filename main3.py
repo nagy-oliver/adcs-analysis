@@ -220,7 +220,7 @@ plots = [
 
 # ---------- Euler Angle Plot (with discontinuity handling) ----------
 
-plt.figure(figsize=(12, 6))
+plt.figure(figsize=(8, 4))
 angles = np.array(data['roll'])
 diff = np.abs(np.diff(angles))
 threshold = 350  # degrees
@@ -253,7 +253,7 @@ for plot in plots:
         # plt.savefig(os.path.join('plots', plot['filename']), format='pdf')
         continue
 
-    plt.figure(figsize=(12, 6))
+    plt.figure(figsize=(8, 3))
 
     if plot['title'] == 'Gravity-gradient torque vs time':
         tg = np.vstack(data['torque gg'])
@@ -286,3 +286,12 @@ if t_threshold is not None:
     print(f'Exceeded pointing accuracy threshold at time {t_threshold:.2f} s.')
 else:
     print('Pointing accuracy threshold was not exceeded during the simulation.')
+
+# print maximum magnitude of total torque of pitch and yaw
+max_torque_pitch = np.max(np.abs(tt[:, 1]))
+max_torque_yaw = np.max(np.abs(tt[:, 2]))
+print(f'Maximum magnitude of total torque for pitch or yaw: {max(max_torque_pitch, max_torque_yaw):.2e} N·m') 
+
+#print maximum magnitude of total torque of roll
+max_torque_roll = np.max(np.abs(tt[:, 0]))
+print(f'Maximum magnitude of total torque for roll: {max_torque_roll:.2e} N·m')
