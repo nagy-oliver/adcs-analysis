@@ -137,7 +137,8 @@ data = {
     'alpha pitch': [],
     'alpha yaw': [],
     'torque gg': [],
-    'torque total': []
+    'torque total': [],
+    'torque solar': []
 }
 
 
@@ -145,7 +146,7 @@ data = {
 
 t_threshold = None
 
-while t <= cst.T * 10:
+while t <= 118.90:
     eulerAnglesGlobalWRTSolarDeg = np.array([0.0,-360*t/cst.T,0.0])
     quaternionGlobalWRTSolar = euler_deg_to_quat(eulerAnglesGlobalWRTSolarDeg)
 
@@ -180,6 +181,7 @@ while t <= cst.T * 10:
     data['alpha yaw'].append(alpha[2])
     data['torque gg'].append(t_gg)
     data.setdefault('torque total', []).append(torque_total)
+    data['torque solar'].append(t_solar)
 
 # ---------- Plot Results ----------
 # ---------- Plot Results ----------
@@ -215,6 +217,12 @@ plots = [
         'y_label': 'Torque [N·m]',
         'series': [('torque total', 'Torque')],
         'filename': 'torque_total.pdf'
+    },
+    {
+        'title': 'Solar torque vs time',
+        'y_label': 'Torque [N·m]',
+        'series': [('torque solar', 'Torque')],
+        'filename': 'torque_solar.pdf'
     }
 ]
 
@@ -267,6 +275,11 @@ for plot in plots:
         plt.plot(data['t'], tt[:, 1], label='Pitch')
         plt.plot(data['t'], tt[:, 2], label='Yaw')
 
+    elif plot['title'] == 'Solar torque vs time':
+        ts = np.vstack(data['torque solar'])
+        plt.plot(data['t'], ts[:, 0], label='Roll')
+        plt.plot(data['t'], ts[:, 1], label='Pitch')
+        plt.plot(data['t'], ts[:, 2], label='Yaw')
     else:
         for key, label in plot['series']:
             plt.plot(data['t'], data[key], label=label)
@@ -295,3 +308,12 @@ print(f'Maximum magnitude of total torque for pitch or yaw: {max(max_torque_pitc
 #print maximum magnitude of total torque of roll
 max_torque_roll = np.max(np.abs(tt[:, 0]))
 print(f'Maximum magnitude of total torque for roll: {max_torque_roll:.2e} N·m')
+
+
+# Compute magnitude of solar torque vector at each time step
+solar_torque_magnitude = np.linalg.norm(ts, axis=1)
+
+# Take the maximum magnitude over all time steps
+max_solar_torque = np.max(solar_torque_magnitude)
+
+print(f'Maximum magnitude of total solar torque: {max_solar_torque:.2e} N·m')
