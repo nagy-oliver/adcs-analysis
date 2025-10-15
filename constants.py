@@ -6,9 +6,9 @@ vec_nadir_0 = np.array([0,0,1])
 h = 750e3
 T = 7625.65 #s
 t_eclipse = 2113.80 #s
-sun_unit_solar = np.array([0,0,1])
+sun_unit_solar = np.array([0.7,0.7,0])
 threshold = 0.1 # deg
-I_sc = np.array([
+I = np.array([
     [1032.537, 13.602, 97.717],
     [13.602, 983.014, -48.576],
     [97.717, -48.576, 400.674]
@@ -26,7 +26,13 @@ I_kick_catia = np.array([
     [97.717, -48.576, 400.674]
 ])
 
-I = np.array([ #spacecraft
+Rot = np.array([
+    [0.0,0.0,1.0],
+    [0.0,1.0,0.0],
+    [-1.0,0.0,0.0]
+])
+
+I_sc = np.array([ #spacecraft
     [400.454, -44.973, -91.736],
     [-44.973, 750.012, -13.505],
     [-91.736, -13.505, 799.638]

@@ -78,9 +78,13 @@ def torque_gg(q, cst):
     """Gravity-gradient torque in body frame."""
     vec_nadir_body = transform_global_to_local(q, cst.vec_nadir_global)
     vec_nadir_body = normalize(vec_nadir_body)
+
     r = cst.h + cst.R
     factor = 3.0 * (cst.mu / (r**3))
-    return factor * np.cross(vec_nadir_body, cst.I @ vec_nadir_body)
+    a = vec_nadir_body
+    b = cst.I @ vec_nadir_body
+    value = factor * np.cross(vec_nadir_body, cst.I @ vec_nadir_body)
+    return value
 
 def torque_solar(q,t_eclipse,t,q_solar):
     """Solar radiation torque in body frame."""
@@ -107,6 +111,7 @@ I_inv = np.linalg.inv(cst.I)
 
 def physics(torques, cst, state, dt):
     t, alpha, omega, q = state
+
     torque_sum = np.sum(torques, axis=0)
     alpha = I_inv @ (torque_sum - np.cross(omega, cst.I @ omega))
     omega += alpha * dt
