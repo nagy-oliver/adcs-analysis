@@ -56,6 +56,22 @@ def transform_global_to_local(q, vector):
     q_conj = quat_conjugate(q)
     return rotate_vector_by_quat(vector, q_conj)
 
+# ---------- Conversion Function ----------
+
+def euler_deg_to_quat(euler_deg):
+    roll, pitch, yaw = np.radians(euler_deg)
+    cr = np.cos(roll / 2)
+    sr = np.sin(roll / 2)
+    cp = np.cos(pitch / 2)
+    sp = np.sin(pitch / 2)
+    cy = np.cos(yaw / 2)
+    sy = np.sin(yaw / 2)
+    w = cr * cp * cy + sr * sp * sy
+    x = sr * cp * cy - cr * sp * sy
+    y = cr * sp * cy + sr * cp * sy
+    z = cr * cp * sy - sr * sp * cy
+    return normalize(np.array([w, x, y, z]))
+
 # ---------- Torque Functions ----------
 
 def torque_gg(q, cst):
@@ -66,14 +82,15 @@ def torque_gg(q, cst):
     factor = 3.0 * (cst.mu / (r**3))
     return factor * np.cross(vec_nadir_body, cst.I @ vec_nadir_body)
 
-def torque_solar(q,t_eclipse,t):
+def torque_solar(q,t_eclipse,t,q_solar):
     """Solar radiation torque in body frame."""
     rho = 0.6
     p_s = 4.8e-5
     s = 1.8**2
     vec_cp_local = np.array([0.0, -1.0, 0.0])
 
-    sun_unit_local = transform_global_to_local(q, cst.sun_unit_global)
+    sunVectorGlobal = transform_global_to_local(q_solar, cst.sun_unit_solar)
+    sun_unit_local = transform_global_to_local(q, sunVectorGlobal)
     solar_force_local = -(1 + rho) * p_s * s * sun_unit_local
     torque_local = np.zeros(3)
     if (t % cst.T) >= t_eclipse:
@@ -121,8 +138,11 @@ data = {
 
 t_threshold = None
 
-while t <= cst.T:
-    t_solar = torque_solar(q, cst.t_eclipse, t)
+while t <= cst.T * 10:
+    eulerAnglesGlobalWRTSolarDeg = np.array([0.0,-360*t/cst.T,0.0])
+    quaternionGlobalWRTSolar = euler_deg_to_quat(eulerAnglesGlobalWRTSolarDeg)
+
+    t_solar = torque_solar(q, cst.t_eclipse, t, quaternionGlobalWRTSolar)
     t_gg = torque_gg(q, cst)
     torques = [t_solar, t_gg, magnetic_torques, internal_torques]
     state = physics(torques, cst, state, dt)
@@ -151,6 +171,9 @@ while t <= cst.T:
     data['alpha pitch'].append(alpha[1])
     data['alpha yaw'].append(alpha[2])
     data['torque gg'].append(t_gg)
+
+
+
 
 # ---------- Plot Results ----------
 
@@ -182,18 +205,41 @@ plots = [
     }
 ]
 
+plt.figure(figsize=(12, 6))
+angles = np.array(data['roll'])
+diff = np.abs(np.diff(angles))
+threshold = 350  # degrees
+angles_plot = angles.copy()
+angles_plot[1:][diff > threshold] = np.nan  # break line
+plt.plot(data['t'],angles_plot,label='Roll')
+angles = np.array(data['pitch'])
+diff = np.abs(np.diff(angles))
+threshold = 350  # degrees
+angles_plot = angles.copy()
+angles_plot[1:][diff > threshold] = np.nan  # break line
+plt.plot(data['t'],angles_plot,label='Pitch')
+angles = np.array(data['yaw'])
+diff = np.abs(np.diff(angles))
+threshold = 350  # degrees
+angles_plot = angles.copy()
+angles_plot[1:][diff > threshold] = np.nan  # break line
+plt.plot(data['t'],angles_plot,label='Yaw')
+
 # Generate and save each figure
 for plot in plots:
-    plt.figure(figsize=(12, 6))
-    for key, label in plot['series']:
-        plt.plot(data['t'], data[key], label=label)
+    if plot['title'] == 'Euler angles':
+        pass
+    else:
+        plt.figure(figsize=(12, 6))
+        for key, label in plot['series']:
+            plt.plot(data['t'], data[key], label=label)
     plt.title(plot['title'])
     plt.xlabel('Time (s)')
     plt.ylabel(plot['y_label'])
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
-    plt.savefig(os.path.join('plots', plot['filename']), format='pdf')
+    #plt.savefig(os.path.join('plots', plot['filename']), format='pdf')
 plt.show()
 
 print(f'Exceeded pointing accuracy threshold at time {t_threshold:.2f} s.')
