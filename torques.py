@@ -27,7 +27,7 @@ def solar_torque(sun_vector_global, quaternion):
         Torque vector in the local (body) frame [N·m].
     """
     # Vector from CoG to center of pressure in local frame
-    vec_cp_local = np.array([0.0, -1.0, 0.0])   # [m]
+    vec_cp_local = np.array([0.5638, -1.0327, -0.1815])   # [m]
 
     # Constants
     rho = 0.6          # reflectivity (from SMAD)
